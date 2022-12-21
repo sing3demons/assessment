@@ -48,7 +48,7 @@ func main() {
 	e.POST("/expenses", h.CreateExpensesHandler)
 	e.GET("/expenses/:id", h.GetExpensesHandlerByID)
 	e.PUT("/expenses/:id", h.UpdateExpensesHandler)
-	// e.DELETE("/expenses/:id", h.DeleteExpenseHandlerByID)
+	e.DELETE("/expenses/:id", h.DeleteExpenseHandlerByID)
 	// e.GET("/expenses", h.ListExpensesHandler)
 
 	fmt.Println("start at port:", os.Getenv("PORT"))
