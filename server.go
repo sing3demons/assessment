@@ -1,11 +1,15 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	_ "github.com/lib/pq"
 
@@ -49,7 +53,7 @@ func main() {
 	e.POST("/expenses", h.CreateExpensesHandler)
 	e.GET("/expenses/:id", h.GetExpensesHandlerByID)
 	e.PUT("/expenses/:id", h.UpdateExpensesHandler)
-	e.DELETE("/expenses/:id", h.DeleteExpenseHandlerByID)
+	// e.DELETE("/expenses/:id", h.DeleteExpenseHandlerByID)
 	// e.GET("/expenses", h.ListExpensesHandler)
 
 	e.Use(echo.MiddlewareFunc(func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -64,5 +68,21 @@ func main() {
 	e.GET("/expenses", h.ListExpensesHandler)
 
 	fmt.Println("start at port:", os.Getenv("PORT"))
-	e.Start(":" + os.Getenv("PORT"))
+	go func() {
+		if err := e.Start(":" + os.Getenv("PORT")); err != nil && err != http.ErrServerClosed {
+			e.Logger.Fatal("shutting down the server")
+		}
+	}()
+
+	shutdown := make(chan os.Signal, 1)
+	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
+	<-shutdown
+	fmt.Println("shutting down...")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
+	fmt.Println("server stop")
 }
