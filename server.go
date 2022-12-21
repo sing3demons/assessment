@@ -10,6 +10,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/sing3demons/assessment/handler/expenses"
 )
 
 func initDB() *sql.DB {
@@ -42,6 +43,9 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+
+	h := expenses.NewApplication(db)
+	e.POST("/expenses", h.CreateExpensesHandler)
 
 	fmt.Println("start at port:", os.Getenv("PORT"))
 	e.Start(":" + os.Getenv("PORT"))
