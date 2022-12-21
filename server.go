@@ -47,7 +47,7 @@ func main() {
 	h := expenses.NewApplication(db)
 	e.POST("/expenses", h.CreateExpensesHandler)
 	e.GET("/expenses/:id", h.GetExpensesHandlerByID)
-	// e.PUT("/expenses/:id", h.UpdateExpensesHandler)
+	e.PUT("/expenses/:id", h.UpdateExpensesHandler)
 	// e.DELETE("/expenses/:id", h.DeleteExpenseHandlerByID)
 	// e.GET("/expenses", h.ListExpensesHandler)
 
