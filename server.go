@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	_ "github.com/lib/pq"
@@ -50,6 +51,17 @@ func main() {
 	e.PUT("/expenses/:id", h.UpdateExpensesHandler)
 	// e.DELETE("/expenses/:id", h.DeleteExpenseHandlerByID)
 	// e.GET("/expenses", h.ListExpensesHandler)
+
+	e.Use(echo.MiddlewareFunc(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			headers := c.Request().Header.Get("Authorization")
+			if headers != "admin" {
+				return c.JSON(http.StatusUnauthorized, echo.Map{"message": "Unauthorized"})
+			}
+			return next(c)
+		}
+	}))
+	e.GET("/expenses", h.ListExpensesHandler)
 
 	fmt.Println("start at port:", os.Getenv("PORT"))
 	e.Start(":" + os.Getenv("PORT"))
