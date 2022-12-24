@@ -25,6 +25,6 @@ services:
       - 2565:2565
     environment:
       - PORT=2565
-      - DATABASE_URL="postgresql://sing:12345678@db/goapi?sslmode=disable"
+      - DATABASE_URL=postgresql://sing:12345678@db/goapi?sslmode=disable
     depends_on:
       - db
