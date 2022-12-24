@@ -121,7 +121,6 @@ func TestUpdateExpensesHandler(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 
-	// expected
 	expected := "{\"id\":1,\"title\":\"apple smoothie\",\"amount\":89,\"note\":\"no discount\",\"tags\":[\"beverage\"]}"
 
 	db, mock, err := sqlmock.New()
@@ -132,6 +131,8 @@ func TestUpdateExpensesHandler(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
+
+	// Act
 	h := handler{db}
 	c := e.NewContext(req, rec)
 
