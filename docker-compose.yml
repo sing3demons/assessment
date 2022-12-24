@@ -12,11 +12,11 @@ services:
       - 5432:5432
       # volumes:
       # - ./_data:/var/lib/postgresql/data
-      # adminer:
-      #   image: adminer
-      #   restart: always
-      #   ports:
-      #     - 8080:8080
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
   webapi:
     build: .
     image: sing3demons/assessment
@@ -25,6 +25,6 @@ services:
       - 2565:2565
     environment:
       - PORT=2565
-      - DATABASE_URL=host=db port=5432 user=sing password=12345678 dbname=goapi sslmode=disable
+      - DATABASE_URL="postgresql://sing:12345678@db/goapi?sslmode=disable"
     depends_on:
       - db

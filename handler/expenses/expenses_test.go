@@ -3,6 +3,7 @@
 
 package expenses
 
+
 import (
 	"net/http"
 	"net/http/httptest"
@@ -15,6 +16,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// go test --tags=unit -v ./...
 func TestListExpensesHandler(t *testing.T) {
 	// Arrange
 	e := echo.New()
