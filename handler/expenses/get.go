@@ -29,25 +29,23 @@ func (h *handler) GetExpensesHandlerByID(c echo.Context) error {
 }
 
 func (h *handler) ListExpensesHandler(c echo.Context) error {
-	stmt, err := h.DB.Prepare("SELECT id, title, amount, note, tags FROM expenses")
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, Err{Message: "can't prepare query all expenses statement:" + err.Error()})
-	}
-	rows, err := stmt.Query()
+
+	rows, err := h.DB.Query("SELECT id, title, amount, note, tags FROM expenses")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, Err{Message: "can't query all expenses:" + err.Error()})
 	}
+	defer rows.Close()
 
-	expenses := []NewsExpenses{}
+	var expenses = []NewsExpenses{}
+	var m = NewsExpenses{}
 
 	for rows.Next() {
-		m := NewsExpenses{}
-		err = rows.Scan(&m.ID, &m.Title, &m.Amount, &m.Note, &m.Tags)
+		err := rows.Scan(&m.ID, &m.Title, &m.Amount, &m.Note, &m.Tags)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, Err{Message: "can't scan expenses:" + err.Error()})
+
 		}
 		expenses = append(expenses, m)
 	}
-
 	return c.JSON(http.StatusOK, expenses)
 }
