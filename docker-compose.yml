@@ -19,7 +19,7 @@ services:
   #     - 8080:8080
   webapi:
     build: .
-    image: sing3demons/assessment
+    image: ghcr.io/sing3demons/assessment:dev
     restart: always
     ports:
       - 2565:2565
