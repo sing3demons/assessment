@@ -50,15 +50,15 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// middleware check Authorization
-	// e.Use(echo.MiddlewareFunc(func(next echo.HandlerFunc) echo.HandlerFunc {
-	// 	return func(c echo.Context) error {
-	// 		headers := c.Request().Header.Get("Authorization")
-	// 		if headers != "admin" {
-	// 			return c.JSON(http.StatusUnauthorized, echo.Map{"message": "Unauthorized"})
-	// 		}
-	// 		return next(c)
-	// 	}
-	// }))
+	e.Use(echo.MiddlewareFunc(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			headers := c.Request().Header.Get("Authorization")
+			if headers != "November 10, 2009" {
+				return c.JSON(http.StatusUnauthorized, echo.Map{"message": "Unauthorized"})
+			}
+			return next(c)
+		}
+	}))
 
 	h := expenses.NewApplication(db)
 	e.POST("/expenses", h.CreateExpensesHandler)
